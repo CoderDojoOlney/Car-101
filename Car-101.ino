@@ -6,6 +6,7 @@
 // This code has been developed for use by the Olney Coder Dojo club
 //
 // This requires the following components:
+//  - Arduino editor 1.6.8 or above
 //  - An Arduino Genuino 101
 //  - An AdaFruit Motor Shield v2.3
 //  - A castor car with two powered wheels
@@ -18,10 +19,10 @@
 #include <Servo.h>
 #include <Adafruit_MotorShield.h>
 #include <CurieBLE.h>
-#include <CurieUart.h>
-#include <CuriePing.h>
+#include <CurieUart.h>    // This is the UART driver that is part of the Dojo codebase 
+#include <CuriePing.h>    // This is the Ping driver that is part of the Dojo codebase
 
-// Calibrated angles for the sensor
+// Calibrated angles for the sensor servo
 #define ANGLE_CENTRE        85
 #define ANGLE_MIN           10
 #define ANGLE_MAX           165
@@ -30,7 +31,7 @@
 #define SPEED_MAX           130
 #define SPEED_SLOW          80
 
-// Loop delay
+// Loop delay in microseconds = 20000 = 50Hz
 #define LOOP_DURATION       20000       
 
 // Create an instance of the motor shield and two motors
