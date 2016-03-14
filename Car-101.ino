@@ -119,6 +119,10 @@ void loop()
   while (central.connected()) 
   {
     unsigned int timer = micros();
+
+    // Measure the distance. Remember that this call blocks for a variable time 
+    // as it waits for a response, so will disrupt the loop timing and the madgewick filter
+    // if we do not compensate (see bottom of loop)
     distance = pinger.ping();
 
     // read raw accel/gyro measurements from device
@@ -137,7 +141,11 @@ void loop()
     servoangle = constrain(servoangle, ANGLE_MIN, ANGLE_MAX);
     servo.write(servoangle);
     
-    // Check if the uart has a string 
+    // Check if the uart has a string. THis is a set of strings returned by the
+    // Nordic nRF Toolbox UART app
+    //
+    // Note: This is a terrible implementation, and a better approach would be to 
+    // set some state variables and have the control logic later.
     if (uart.hasString())
     {
       data = uart.getString();
@@ -179,7 +187,9 @@ void loop()
       }
     } 
 
-    // Force a fixed delay
+    // Force a fixed delay. The madgewick algorithm needs a fixed calling frequency
+    // to remain accurate and the pinger blocks for a variable time, so crudely
+    // wait for the balance of LOOP_DURATION before continuing
     unsigned int timeleft = (LOOP_DURATION) - (micros() - timer);
     timeleft = constrain(timeleft, 0, LOOP_DURATION);
     delayMicroseconds(timeleft);
